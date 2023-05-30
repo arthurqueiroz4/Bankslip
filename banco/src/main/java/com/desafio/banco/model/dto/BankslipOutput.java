@@ -11,8 +11,8 @@ import lombok.Data;
 @Builder
 public class BankslipOutput {
     
-    private LocalDate due_date;
-	private LocalDate payment_date;
+    private String due_date;
+	private String payment_date;
 
     private long total_in_cents;
 	private long fine;
