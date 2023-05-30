@@ -1,7 +1,5 @@
 package com.desafio.banco.model.dto;
 
-import java.time.LocalDate;
-
 import com.desafio.banco.model.Status;
 
 import lombok.Builder;
