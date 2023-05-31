@@ -32,11 +32,11 @@ public class Bankslip {
 
     @NotNull(message = "due_date field is required")
     @JsonFormat(pattern = "dd/MM/yyyy")
-    private LocalDate due_date;
-	private LocalDate payment_date;
+    private LocalDate dueDate;
+	private LocalDate paymentDate;
 
     @NotNull(message = "total_in_cents field is required")
-    private long total_in_cents;
+    private long totalInCents;
 	private long fine;
 
 

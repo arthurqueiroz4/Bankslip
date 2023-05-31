@@ -11,23 +11,30 @@ import com.desafio.banco.model.Bankslip;
 import com.desafio.banco.model.Status;
 import com.desafio.banco.model.dto.BankslipInput;
 import com.desafio.banco.model.dto.BankslipOutput;
+import com.desafio.banco.repository.BankslipCustomRepository;
 import com.desafio.banco.repository.BankslipRepository;
+
+import lombok.Getter;
 
 @Service
 public class BankslipService {
     
+    
+    public DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+
     @Autowired
     private BankslipRepository repository;
 
-    public BankslipOutput create(BankslipInput bankslipInput){
+    @Autowired
+    private BankslipCustomRepository repositoryCustom;
 
-        DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+    public BankslipOutput create(BankslipInput bankslipInput){
         LocalDate due_time = LocalDate.parse(bankslipInput.getDue_date(), dateFormatter);
 
         Bankslip bankslip = Bankslip.builder()
-                                    .due_date(due_time)
-                                    .payment_date(null)
-                                    .total_in_cents(bankslipInput.getTotal_in_cents())
+                                    .dueDate(due_time)
+                                    .paymentDate(null)
+                                    .totalInCents(bankslipInput.getTotal_in_cents())
                                     .fine(0)
                                     .customer(bankslipInput.getCustomer())
                                     .status(Status.PENDING)
@@ -50,5 +57,22 @@ public class BankslipService {
 
     public List<Bankslip> getAll(){
         return repository.findAll();
+    }
+
+	public List<Bankslip> findCustom(
+        String dueDateString, String paymentDateString, Long totalInCents, Long fine, String customer, Status status
+    ){
+        LocalDate dueDate = null;
+        LocalDate paymenteDate = null;
+        
+        if (dueDateString != null){
+            dueDate = LocalDate.parse(dueDateString, dateFormatter);
+        }
+        
+        if (paymentDateString != null){
+            paymenteDate = LocalDate.parse(paymentDateString, dateFormatter);
+        }
+
+        return repositoryCustom.find(dueDate, paymenteDate, totalInCents, fine, customer, status);
     }
 }
