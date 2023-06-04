@@ -24,7 +24,7 @@ import lombok.Setter;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class Bankslip {
+public class Bankslip implements Comparable<Bankslip>{
     
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -44,4 +44,13 @@ public class Bankslip {
 
     @Enumerated(EnumType.STRING)
     private Status status;
+
+    @Override
+    public int compareTo(Bankslip o) {
+        if (dueDate.isBefore(o.getDueDate())){
+            return -1;
+        } else if (dueDate.isBefore(o.getDueDate())){
+            return 1;
+        } else return 0;
+    }
 }

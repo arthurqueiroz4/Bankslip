@@ -1,19 +1,14 @@
 package com.desafio.banco.controller;
 
-import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 import javax.validation.Valid;
-import javax.websocket.server.PathParam;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cglib.core.Local;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -32,8 +27,6 @@ public class BankslipController {
 
     @Autowired
     private BankslipService service;
-    
-    private boolean existsInListEntities;
 
     @PostMapping
     public ResponseEntity<BankslipOutput> create( @Valid @RequestBody BankslipInput bankslipInput){
@@ -60,10 +53,20 @@ public class BankslipController {
         
 
         List<Bankslip> listReturn = service.findCustom(
-            due_date_String.orElse(null), payment_date_String.orElse(null), total_in_cents.orElse(null),
-            fine.orElse(null), customer.orElse(null), status.orElse(null)
+            due_date_String.orElse(null),
+            payment_date_String.orElse(null),
+            total_in_cents.orElse(null),
+            fine.orElse(null),
+            customer.orElse(null),
+            status.orElse(null)
             );
 
         return new ResponseEntity<List<Bankslip>>(listReturn, HttpStatus.OK);
+    }
+
+    @GetMapping("/orderDate")
+    public ResponseEntity<List<Bankslip>> orderByDate (){
+        List<Bankslip> listOrder = service.orderByDate();
+        return new ResponseEntity<List<Bankslip>>(listOrder, HttpStatus.OK);
     }
 }

@@ -2,6 +2,7 @@ package com.desafio.banco.service;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.Collections;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,8 +14,6 @@ import com.desafio.banco.model.dto.BankslipInput;
 import com.desafio.banco.model.dto.BankslipOutput;
 import com.desafio.banco.repository.BankslipCustomRepository;
 import com.desafio.banco.repository.BankslipRepository;
-
-import lombok.Getter;
 
 @Service
 public class BankslipService {
@@ -74,5 +73,11 @@ public class BankslipService {
         }
 
         return repositoryCustom.find(dueDate, paymenteDate, totalInCents, fine, customer, status);
+    }
+
+    public List<Bankslip> orderByDate() {
+        List<Bankslip> queryBankslips = repository.findAll();
+        Collections.sort(queryBankslips);
+        return queryBankslips;
     }
 }
