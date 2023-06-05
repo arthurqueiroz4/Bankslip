@@ -37,7 +37,7 @@ public class Bankslip implements Comparable<Bankslip>{
 
     @NotNull(message = "total_in_cents field is required")
     private long totalInCents;
-	private long fine;
+	private Double fine;
 
 
     private String customer;

@@ -4,6 +4,7 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -29,12 +30,12 @@ public class BankslipService {
 
     public BankslipOutput create(BankslipInput bankslipInput){
         LocalDate due_time = LocalDate.parse(bankslipInput.getDue_date(), dateFormatter);
-
+        
         Bankslip bankslip = Bankslip.builder()
                                     .dueDate(due_time)
                                     .paymentDate(null)
                                     .totalInCents(bankslipInput.getTotal_in_cents())
-                                    .fine(0)
+                                    .fine(0.0)
                                     .customer(bankslipInput.getCustomer())
                                     .status(Status.PENDING)
                                     .build();
@@ -55,6 +56,7 @@ public class BankslipService {
     }
 
     public List<Bankslip> getAll(){
+        repository.findAll().forEach(bankslip -> setStatus(bankslip));
         return repository.findAll();
     }
 
@@ -78,6 +80,25 @@ public class BankslipService {
     public List<Bankslip> orderByDate() {
         List<Bankslip> queryBankslips = repository.findAll();
         Collections.sort(queryBankslips);
+        queryBankslips.forEach(bankslip -> setStatus(bankslip));
         return queryBankslips;
+    }
+
+	public Bankslip findById(Long id) {
+        Bankslip bankslip = repository.findById(id).orElse(null);
+        setStatus(bankslip);
+		return bankslip;
+	}
+
+    private static void setStatus(Bankslip bankslip){
+        
+        if (bankslip.getDueDate().isBefore(LocalDate.now())){
+            bankslip.setStatus(Status.OVERDUE);
+        } else if (bankslip.getPaymentDate()!=null){
+            bankslip.setStatus(Status.CLOSED);
+        }else{
+            bankslip.setStatus(Status.PENDING);
+        }
+        
     }
 }
