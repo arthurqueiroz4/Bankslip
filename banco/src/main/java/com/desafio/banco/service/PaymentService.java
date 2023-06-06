@@ -1,5 +1,7 @@
 package com.desafio.banco.service;
 
+import java.time.LocalDate;
+
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -25,5 +27,17 @@ public class PaymentService {
         output.setFine(fine);
         return output;
     }
+
+    public PaymentOutput toPay(Long idBankslip, Double toPay) {    
+        Bankslip bankslip = bankslipService.findById(idBankslip);
+        if ((createPayment(idBankslip).getFine() - toPay) == 0){
+            bankslip.setPaymentDate(LocalDate.now());
+            bankslip.setFine(createPayment(idBankslip).getFine());
+            bankslipService.create(bankslip);
+        }
+        return mapper.map(bankslip, PaymentOutput.class);
+    }
+
+
     
 }

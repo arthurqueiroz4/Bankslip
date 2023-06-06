@@ -33,6 +33,7 @@ public class Bankslip implements Comparable<Bankslip>{
     @NotNull(message = "due_date field is required")
     @JsonFormat(pattern = "dd/MM/yyyy")
     private LocalDate dueDate;
+    @JsonFormat(pattern = "dd/MM/yyyy")
 	private LocalDate paymentDate;
 
     @NotNull(message = "total_in_cents field is required")
