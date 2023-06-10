@@ -6,6 +6,8 @@ import java.util.Optional;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -69,4 +71,9 @@ public class BankslipController {
         List<Bankslip> listOrder = service.orderByDate();
         return new ResponseEntity<List<Bankslip>>(listOrder, HttpStatus.OK);
     }
+
+    @GetMapping("/page")
+    public ResponseEntity<Page<Bankslip>> findByPage(Pageable pageable){
+        return new ResponseEntity<Page<Bankslip>>(service.findByPage(pageable), HttpStatus.OK);
+    } 
 }
